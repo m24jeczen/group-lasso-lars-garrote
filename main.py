@@ -34,19 +34,16 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np
 
-# Generowanie danych
 X, Y, group_indices = generate_data()
-true_groups = {0, 2, 4}  # Indeksy grup istotnych (zgodnie z generacją danych)
+true_groups = {0, 2, 4} 
 
-# Dopasowanie modeli
-true_group_count = 3  # bo tylko grupy 0, 2, 4 są istotne
+true_group_count = 3 
 best_lambda = select_lambda_group_lasso_target_groups(X, Y, group_indices, true_group_count)
 
 beta_lasso, pred_lasso = group_lasso(X, Y, group_indices, lambda_=best_lambda)
 beta_lars, pred_lars = group_lars(X, Y, group_indices)
 beta_garrote, pred_garrote, d_path, residuals = group_non_negative_garrote_full(X, Y, group_indices)
 
-# Funkcja do obliczania TPR, FPR
 def evaluate_selection(beta, group_indices, true_groups):
     selected = set()
     for i, idxs in enumerate(group_indices):
@@ -60,7 +57,6 @@ def evaluate_selection(beta, group_indices, true_groups):
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
     return tpr, fpr, list(selected)
 
-# Obliczanie metryk
 mse_lasso = mean_squared_error(Y, pred_lasso)
 mse_lars = mean_squared_error(Y, pred_lars)
 mse_garrote = mean_squared_error(Y, pred_garrote)
@@ -69,7 +65,6 @@ tpr_lasso, fpr_lasso, selected_lasso = evaluate_selection(beta_lasso, group_indi
 tpr_lars, fpr_lars, selected_lars = evaluate_selection(beta_lars, group_indices, true_groups)
 tpr_garrote, fpr_garrote, selected_garrote = evaluate_selection(beta_garrote, group_indices, true_groups)
 
-# Tabela wyników
 results_df = pd.DataFrame({
     "Method": ["Group Lasso", "Group LARS", "Group Garrote"],
     "MSE": [mse_lasso, mse_lars, mse_garrote],

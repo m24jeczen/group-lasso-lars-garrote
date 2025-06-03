@@ -1,6 +1,4 @@
 import numpy as np
-from sklearn.model_selection import KFold
-from sklearn.metrics import mean_squared_error
 
 def group_lasso(X, y, groups, lambda_, max_iter=100, tol=1e-6):
     beta = np.zeros(X.shape[1])
@@ -24,34 +22,6 @@ def group_lasso(X, y, groups, lambda_, max_iter=100, tol=1e-6):
             break
     return beta, X @ beta
 
-# def select_lambda_group_lasso(X, Y, group_indices, lambdas=None, n_splits=5):
-#     if lambdas is None:
-#         lambdas = np.logspace(-2, 0.5, 20)
-
-#     kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
-#     best_lambda = None
-#     best_mse = np.inf
-
-#     for lam in lambdas:
-#         mses = []
-#         for train_idx, test_idx in kf.split(X):
-#             X_train, X_test = X[train_idx], X[test_idx]
-#             y_train, y_test = Y[train_idx], Y[test_idx]
-
-#             beta, _ = group_lasso(X_train, y_train, group_indices, lambda_=lam)
-#             y_pred = X_test @ beta
-#             if np.any(np.isnan(y_pred)):
-#                 mse = np.inf
-#             else:
-#                 mse = mean_squared_error(y_test, y_pred)
-#             mses.append(mse)
-
-#         mean_mse = np.mean(mses)
-#         if mean_mse < best_mse:
-#             best_mse = mean_mse
-#             best_lambda = lam
-
-#     return best_lambda, best_mse
 
 def select_lambda_group_lasso_target_groups(X, Y, group_indices, true_group_count, lambdas=None):
     if lambdas is None:
@@ -70,7 +40,7 @@ def select_lambda_group_lasso_target_groups(X, Y, group_indices, true_group_coun
         if diff < min_diff:
             min_diff = diff
             best_lambda = lam
-            if diff == 0:  # jeśli idealnie trafiliśmy, nie szukaj dalej
+            if diff == 0:  
                 break
 
     return best_lambda
