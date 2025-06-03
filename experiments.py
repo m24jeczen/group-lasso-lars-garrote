@@ -7,10 +7,10 @@ from group_lars import group_lars
 from group_garrote import group_non_negative_garrote_full
 import matplotlib.pyplot as plt
 
-def evaluate_selection(beta, group_indices, true_groups={0, 2, 4}):
+def evaluate_selection(beta, group_indices, true_groups={0, 2, 4}, atol=1e-6):
     selected = set()
     for i, idxs in enumerate(group_indices):
-        if np.linalg.norm(beta[idxs]) > 1e-6:
+        if not np.allclose(beta[idxs], 0, atol=atol):
             selected.add(i)
     tp = len(selected & true_groups)
     fp = len(selected - true_groups)
