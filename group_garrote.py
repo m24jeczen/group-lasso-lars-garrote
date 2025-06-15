@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-def group_non_negative_garrote_full(X, y, groups, tol=1e-6, max_iter=1000):
+def group_non_negative_garrote_full(X, y, groups, tol=1e-12, max_iter=1000):
     n, p = X.shape
     J = len(groups)
 
