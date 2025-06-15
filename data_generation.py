@@ -3,7 +3,7 @@ from sklearn.preprocessing import OneHotEncoder, normalize
 
 def generate_data(seed=0):
     np.random.seed(seed)
-    n_samples = 50
+    n_samples = 100
     n_factors = 15
     rho = 0.5
 
